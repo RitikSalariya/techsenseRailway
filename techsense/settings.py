@@ -17,7 +17,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6i+_lksx=4j6a4tpxo*kl^ad_2e**axw&7%%q&u^(lrnr9niv6'
 
 # Local development only – keep True
-DEBUG = os.getenv("DEBUG", "True") == "True"
+DEBUG = os.getenv("DEBUG", "False") == "True"
+
 
 
 # ALLOWED_HOSTS: list[str] = []
@@ -30,6 +31,7 @@ ALLOWED_HOSTS = [
 ]
 CSRF_TRUSTED_ORIGINS = [
     "https://web-production-78712.up.railway.app",
+    "https://*.up.railway.app",
 ]
 
 LOGIN_URL = 'store:login'
