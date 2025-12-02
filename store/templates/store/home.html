@@ -1,0 +1,300 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+{# HERO SECTION #}
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+    {# LEFT: TEXT CONTENT #}
+    <div class="space-y-6">
+      <div class="inline-block px-4 py-2 bg-gradient-to-r from-[#38BDF8]/20 to-[#4F46E5]/20 rounded-full border border-[#38BDF8]/30">
+        <span class="text-[#4F46E5] text-sm">Premium Projects for Students</span>
+      </div>
+
+      <h1 class="text-3xl md:text-4xl lg:text-5xl font-semibold text-[#0F172A] leading-tight">
+        Your Final Year Project,
+        <span class="bg-gradient-to-r from-[#38BDF8] to-[#4F46E5] bg-clip-text text-transparent">
+          Ready to Impress
+        </span>
+      </h1>
+
+      <p class="text-[#0F172A]/70 text-lg">
+        Get high-quality, industry-standard projects for your final year and mini projects.
+        Built by experts, designed to help you score better and land your dream job.
+      </p>
+
+      <div class="flex flex-wrap gap-4">
+        <a href="{% url 'store:project_list' %}"
+           class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#4F46E5] text-white text-sm font-semibold shadow-lg hover:bg-[#4338CA] transition">
+          Explore Projects
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+               viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+
+        <a href="{% url 'store:contact' %}"
+           class="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[#CBD5F5] text-sm font-semibold text-[#0F172A] bg-white hover:bg-[#F9FAFB] transition">
+          Request Custom Project
+        </a>
+      </div>
+
+      <div class="flex items-center space-x-8 pt-4 text-sm">
+        <div>
+          <p class="text-[#0F172A] text-xl font-semibold">500+</p>
+          <p class="text-[#0F172A]/60">Projects Delivered</p>
+        </div>
+        <div>
+          <p class="text-[#0F172A] text-xl font-semibold">4.8★</p>
+          <p class="text-[#0F172A]/60">Average Rating</p>
+        </div>
+        <div>
+          <p class="text-[#0F172A] text-xl font-semibold">1000+</p>
+          <p class="text-[#0F172A]/60">Happy Students</p>
+        </div>
+      </div>
+    </div>
+
+    {# RIGHT: FEATURED PROJECT CARD #}
+    <div class="relative">
+      <div class="absolute -inset-4 bg-gradient-to-r from-[#38BDF8] to-[#4F46E5] rounded-3xl opacity-20 blur-2xl"></div>
+
+      {% with fp=featured_project|default:latest_projects.0 %}
+      {% if fp %}
+      <div class="relative bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl p-6 border border-white/20">
+        <div class="absolute top-6 right-6 px-3 py-1 bg-gradient-to-r from-[#38BDF8] to-[#4F46E5] text-white text-xs rounded-full">
+          Featured
+        </div>
+
+        <div class="h-64 rounded-2xl overflow-hidden mb-6 bg-gradient-to-br from-[#38BDF8]/10 to-[#4F46E5]/10">
+          {% if fp.thumbnail %}
+          <img src="{{ fp.thumbnail.url }}" alt="{{ fp.title }}" class="w-full h-full object-cover">
+          {% endif %}
+        </div>
+
+        <h3 class="text-lg font-semibold text-[#0F172A] mb-3">{{ fp.title }}</h3>
+        <p class="text-[#0F172A]/60 text-sm mb-4">
+          {{ fp.short_description|default:fp.description|truncatewords:25 }}
+        </p>
+
+        <div class="flex flex-wrap gap-2 mb-4">
+          <span class="px-3 py-1 bg-[#F7F9FC] text-[#4F46E5] text-xs rounded-lg">
+            {{ fp.tech_stack|default:"Django • ML • Database" }}
+          </span>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="text-[#0F172A]/60 text-xs">Price</span>
+            <p class="text-[#4F46E5] font-semibold">₹{{ fp.price }}</p>
+          </div>
+          <a href="{% url 'store:project_detail' fp.slug %}"
+             class="inline-flex items-center justify-center px-4 py-2 rounded-full bg-[#4F46E5] text-white text-sm font-medium hover:bg-[#4338CA] transition">
+            View Details
+          </a>
+        </div>
+      </div>
+      {% endif %}
+      {% endwith %}
+    </div>
+  </div>
+</section>
+
+{# CATEGORIES SECTION (STATIC) #}
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <div class="text-center mb-12">
+    <h2 class="text-2xl font-semibold text-[#0F172A] mb-2">Browse by Category</h2>
+    <p class="text-[#0F172A]/60">Find the perfect project for your domain</p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <a href="{% url 'store:project_list' %}?category=web"
+       class="group relative bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 hover:border-[#38BDF8]/30 transform hover:-translate-y-2">
+      <div class="w-14 h-14 bg-gradient-to-br from-[#38BDF8] to-[#0EA5E9] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform text-white text-xl">
+        &lt;/&gt;
+      </div>
+      <h3 class="text-[#0F172A] mb-2">Web Development</h3>
+      <p class="text-[#0F172A]/60 text-sm">Django, MERN and more</p>
+    </a>
+
+    <a href="{% url 'store:project_list' %}?category=ml"
+       class="group relative bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 hover:border-[#38BDF8]/30 transform hover:-translate-y-2">
+      <div class="w-14 h-14 bg-gradient-to-br from-[#4F46E5] to-[#7C3AED] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform text-white text-xl">
+        AI
+      </div>
+      <h3 class="text-[#0F172A] mb-2">ML / AI</h3>
+      <p class="text-[#0F172A]/60 text-sm">Machine Learning projects</p>
+    </a>
+
+    <a href="{% url 'store:project_list' %}?category=mobile"
+       class="group relative bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 hover:border-[#38BDF8]/30 transform hover:-translate-y-2">
+      <div class="w-14 h-14 bg-gradient-to-br from-[#06B6D4] to-[#0891B2] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform text-white text-xl">
+        📱
+      </div>
+      <h3 class="text-[#0F172A] mb-2">Mobile Apps</h3>
+      <p class="text-[#0F172A]/60 text-sm">Android and cross-platform</p>
+    </a>
+
+    <a href="{% url 'store:project_list' %}?category=iot"
+       class="group relative bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 hover:border-[#38BDF8]/30 transform hover:-translate-y-2">
+      <div class="w-14 h-14 bg-gradient-to-br from-[#8B5CF6] to-[#6366F1] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform text-white text-xl">
+        🌐
+      </div>
+      <h3 class="text-[#0F172A] mb-2">IoT</h3>
+      <p class="text-[#0F172A]/60 text-sm">Hardware + cloud projects</p>
+    </a>
+  </div>
+</section>
+
+{# LATEST PROJECTS SECTION #}
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h2 class="text-2xl font-semibold text-[#0F172A] mb-2">Latest Projects</h2>
+      <p class="text-[#0F172A]/60">Recently added premium projects</p>
+    </div>
+    <a href="{% url 'store:project_list' %}"
+       class="inline-flex items-center px-4 py-2 rounded-full border border-[#CBD5F5] text-sm text-[#0F172A] bg-white hover:bg-[#F9FAFB]">
+      View All
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for project in latest_projects %}
+    <a href="{% url 'store:project_detail' project.slug %}"
+       class="group bg-white/80 backdrop-blur-sm rounded-2xl border border-white/20 shadow-md hover:shadow-xl hover:-translate-y-1 transition overflow-hidden flex flex-col">
+      <div class="relative">
+        {% if project.thumbnail %}
+        <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}"
+             class="w-full h-48 object-cover">
+        {% else %}
+        <div class="w-full h-48 bg-slate-100 flex items-center justify-center text-xs text-slate-400">
+          No image yet
+        </div>
+        {% endif %}
+        <span class="absolute top-3 left-3 text-[11px] px-2 py-0.5 rounded-full bg-white/80 backdrop-blur text-slate-700 border border-slate-200">
+          {{ project.level|capfirst }}
+        </span>
+      </div>
+
+      <div class="p-4 space-y-2 flex-1 flex flex-col">
+        <h3 class="font-semibold text-[#0F172A] text-sm line-clamp-1">
+          {{ project.title }}
+        </h3>
+        <p class="text-[11px] text-[#0F172A]/60">
+          {{ project.tech_stack }}
+        </p>
+        <p class="text-xs text-[#0F172A]/70 line-clamp-2 flex-1">
+          {{ project.short_description|default:project.description|truncatewords:18 }}
+        </p>
+
+        <div class="flex items-center justify-between pt-2">
+          <span class="text-sm font-semibold text-[#4F46E5]">
+            ₹{{ project.price }}
+          </span>
+          <span class="text-[11px] text-[#0F172A]/40">
+            {{ project.created_at|date:"d M Y" }}
+          </span>
+        </div>
+      </div>
+    </a>
+    {% empty %}
+    <p class="text-sm text-slate-500">No projects yet. Add some in admin.</p>
+    {% endfor %}
+  </div>
+</section>
+
+
+{# BLOG PREVIEW #}
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h2 class="text-2xl font-semibold text-[#0F172A] mb-2">
+        From the Blog
+      </h2>
+      <p class="text-[#0F172A]/60">
+        Latest articles and tutorials
+      </p>
+    </div>
+    <a href="{% url 'store:blog_list' %}"
+       class="inline-flex items-center px-4 py-2 rounded-full border border-slate-200 text-sm text-[#0F172A] bg-white hover:bg-slate-50">
+      View All
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for post in latest_posts %}
+    <a href="{% url 'store:blog_detail' post.pk %}"
+       class="group bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200/50 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col">
+      <div class="relative h-48 bg-gradient-to-br from-slate-100 to-slate-50">
+        {% if post.image %}
+        <img src="{{ post.image.url }}" alt="{{ post.title }}"
+             class="w-full h-full object-cover">
+        {% else %}
+        <div class="w-full h-full flex items-center justify-center">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-r from-[#38BDF8] to-[#4F46E5] flex items-center justify-center text-white">
+            <span class="text-lg font-bold">B</span>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="p-6 space-y-3 flex-1">
+        <div class="flex items-center gap-2">
+          <span class="px-3 py-1 bg-slate-100 text-slate-700 text-xs rounded-full">
+            {{ post.category|default:"General" }}
+          </span>
+          <span class="text-xs text-slate-500">
+            {{ post.created_at|date:"d M Y" }}
+          </span>
+        </div>
+
+        <h3 class="font-semibold text-slate-900 text-lg line-clamp-2 group-hover:text-[#4F46E5]">
+          {{ post.title }}
+        </h3>
+
+        <p class="text-sm text-slate-600 line-clamp-3">
+          {{ post.content|striptags|truncatewords:20 }}
+        </p>
+
+        <div class="pt-4 flex items-center justify-between">
+          <span class="inline-flex items-center text-sm font-medium text-[#4F46E5] group-hover:underline">
+            Read article
+            <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+            </svg>
+          </span>
+        </div>
+      </div>
+    </a>
+    {% empty %}
+    <div class="col-span-3 text-center py-12">
+      <p class="text-slate-500">No blog posts yet. Check back soon!</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+
+
+{# CTA SECTION #}
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <div class="relative bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-3xl p-12 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-[#38BDF8]/10 to-[#4F46E5]/10"></div>
+    <div class="relative text-center">
+      <h2 class="text-2xl font-semibold text-white mb-4">Need a Custom Project?</h2>
+      <p class="text-white/70 mb-8 max-w-2xl mx-auto text-sm">
+        Can't find what you're looking for? Get a custom project built specifically for your requirements.
+      </p>
+      <a href="{% url 'store:contact' %}"
+         class="inline-flex items-center px-6 py-3 rounded-full bg-white text-[#0F172A] text-sm font-semibold shadow-lg hover:bg-slate-100 transition">
+        Request Custom Project
+      </a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

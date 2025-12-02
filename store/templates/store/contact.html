@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="py-10 bg-[#F3F4F6]">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    {# PAGE HEADING #}
+    <div class="mb-8 text-center lg:text-left">
+      <h1 class="text-2xl md:text-3xl font-semibold text-[#0F172A] mb-2">
+        Share Your Project Idea
+      </h1>
+      <p class="text-sm md:text-base text-[#0F172A]/70 max-w-2xl mx-auto lg:mx-0">
+        Tell us your project topic, tech stack (Django / MERN / ML / AI / etc.), and the features you want.
+        We’ll get back to you with a clear plan, timeline, and pricing.
+      </p>
+    </div>
+
+    {# SUCCESS / ERROR MESSAGES #}
+    {% if messages %}
+      <div class="mb-6 space-y-2">
+        {% for message in messages %}
+          <div class="px-4 py-3 rounded-2xl text-sm
+                      {% if message.tags == 'success' %}
+                        bg-emerald-50 text-emerald-700 border border-emerald-100
+                      {% else %}
+                        bg-rose-50 text-rose-700 border border-rose-100
+                      {% endif %}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="grid gap-8 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.9fr)] items-start">
+      {# LEFT: FORM CARD #}
+      <div class="ts-contact-card bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
+        <div class="border-b border-slate-100 px-5 sm:px-7 py-4 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#38BDF8] to-[#4F46E5] flex items-center justify-center text-white text-lg">
+            💡
+          </div>
+          <div>
+            <p class="text-sm font-medium text-[#0F172A]">
+              Custom Project Request
+            </p>
+            <p class="text-[11px] text-[#0F172A]/60">
+              Fill the form and our team will reach out on WhatsApp / email.
+            </p>
+          </div>
+        </div>
+
+        <div class="px-5 sm:px-7 py-6 sm:py-7">
+          <form method="post" class="space-y-4">
+            {% csrf_token %}
+
+            {% for field in form %}
+              <div>
+                <label class="block text-xs font-medium text-[#0F172A]/70 mb-1.5">
+                  {{ field.label }}
+                  {% if field.field.required %}
+                    <span class="text-rose-500">*</span>
+                  {% endif %}
+                </label>
+                {{ field }}
+                {% if field.errors %}
+                  <p class="mt-1 text-[11px] text-rose-600">
+                    {{ field.errors|striptags }}
+                  </p>
+                {% endif %}
+              </div>
+            {% endfor %}
+
+            <button type="submit"
+                    class="mt-2 w-full inline-flex items-center justify-center px-6 py-3 rounded-full bg-[#4F46E5] text-white text-sm font-semibold shadow-md hover:bg-[#4338CA] transition">
+              Submit Idea
+            </button>
+          </form>
+        </div>
+      </div>
+
+      {# RIGHT: INFO / NAV / HINTS #}
+      <div class="space-y-4">
+        <div class="bg-white/80 backdrop-blur-sm rounded-3xl border border-white/40 shadow-md p-6">
+          <h2 class="text-sm font-semibold text-[#0F172A] mb-3">
+            How it works
+          </h2>
+          <ol class="space-y-2 text-xs text-[#0F172A]/70">
+            <li><span class="font-semibold text-[#0F172A]">1.</span> Share your project idea and required modules in the form.</li>
+            <li><span class="font-semibold text-[#0F172A]">2.</span> Our team reviews your requirements and checks feasibility.</li>
+            <li><span class="font-semibold text-[#0F172A]">3.</span> You’ll get estimated price &amp; timeline on WhatsApp / email.</li>
+            <li><span class="font-semibold text-[#0F172A]">4.</span> Once confirmed, we start development &amp; provide regular updates.</li>
+          </ol>
+        </div>
+
+        <div class="bg-gradient-to-br from-[#38BDF8]/10 to-[#4F46E5]/10 rounded-3xl border border-[#C7D2FE] p-6">
+          <h2 class="text-sm font-semibold text-[#0F172A] mb-3">
+            Tips for a clear request
+          </h2>
+          <ul class="space-y-1.5 text-xs text-[#0F172A]/70">
+            <li>• Mention your <span class="font-medium text-[#0F172A]">course / branch / year</span>.</li>
+            <li>• Write your preferred <span class="font-medium text-[#0F172A]">tech stack</span> (Django, React, ML, etc.).</li>
+            <li>• List important <span class="font-medium text-[#0F172A]">modules / features</span> you need.</li>
+            <li>• Add your <span class="font-medium text-[#0F172A]">deadline</span> or submission date.</li>
+          </ul>
+        </div>
+
+        <div class="bg-white/80 backdrop-blur-sm rounded-3xl border border-white/40 p-5 text-xs text-[#0F172A]/70 space-y-1.5">
+          <p class="font-semibold text-[#0F172A] text-sm">
+            Need quick help?
+          </p>
+          <p>After submitting the form, you can also share your idea on WhatsApp (we’ll send the number in the reply mail).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Scoped styles only for this card */
+  .ts-contact-card input[type="text"],
+  .ts-contact-card input[type="email"],
+  .ts-contact-card input[type="tel"],
+  .ts-contact-card textarea {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    background-color: #F7F9FC;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+  }
+
+  .ts-contact-card textarea {
+    min-height: 140px;
+    resize: vertical;
+  }
+
+  .ts-contact-card input:focus,
+  .ts-contact-card textarea:focus {
+    border-color: #38BDF8;
+    box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.35);
+    background-color: #ffffff;
+  }
+</style>
+{% endblock %}

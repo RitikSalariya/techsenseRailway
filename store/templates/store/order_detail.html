@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-[#F3F4F6]">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+    <!-- Back link -->
+    <a href="{% url 'store:my_orders' %}"
+       class="inline-flex items-center text-xs text-[#38BDF8] hover:text-[#0EA5E9] mb-5">
+      ← Back to My Orders
+    </a>
+
+    <!-- Flash messages -->
+    {% if messages %}
+      <div class="mb-4 space-y-2">
+        {% for message in messages %}
+          <div class="px-4 py-3 rounded-2xl text-sm
+                      {% if message.tags == 'success' %}
+                        bg-emerald-50 text-emerald-700 border border-emerald-100
+                      {% else %}
+                        bg-rose-50 text-rose-700 border border-rose-100
+                      {% endif %}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Order card -->
+    <div class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+      <!-- Header -->
+      <div class="px-6 py-4 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p class="text-xs text-[#0F172A]/60">Order</p>
+          <p class="text-base font-semibold text-[#0F172A]">#{{ order.id }}</p>
+        </div>
+        <div class="flex items-center gap-3 text-xs text-[#0F172A]/60">
+          <span>Placed on {{ order.created_at|date:"d M Y H:i" }}</span>
+
+          {% if order.status == 'completed' %}
+            <span class="inline-flex items-center px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 font-medium border border-emerald-100">
+              ● Completed
+            </span>
+          {% elif order.status == 'cancelled' %}
+            <span class="inline-flex items-center px-3 py-1 rounded-full bg-rose-50 text-rose-700 font-medium border border-rose-100">
+              ● Cancelled
+            </span>
+          {% else %}
+            <span class="inline-flex items-center px-3 py-1 rounded-full bg-amber-50 text-amber-700 font-medium border border-amber-100">
+              ● Pending
+            </span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Main body -->
+      <div class="px-6 py-6 grid gap-6 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] items-start">
+        <!-- Left: project summary -->
+        <div class="space-y-4">
+          <div class="flex gap-4">
+            <div class="w-28 h-24 rounded-xl overflow-hidden bg-gradient-to-br from-[#38BDF8]/10 to-[#4F46E5]/10 flex-shrink-0">
+              {% if order.project.thumbnail %}
+                <img src="{{ order.project.thumbnail.url }}"
+                     alt="{{ order.project.title }}"
+                     class="w-full h-full object-cover">
+              {% else %}
+                <div class="w-full h-full flex items-center justify-center text-[11px] text-slate-400 px-2 text-center">
+                  No thumbnail uploaded
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-[#0F172A]/60 mb-1">Project</p>
+              <h2 class="text-sm font-semibold text-[#0F172A] truncate">
+                {{ order.project.title }}
+              </h2>
+              <p class="text-[11px] text-[#0F172A]/60 line-clamp-2 mt-1">
+                {{ order.project.short_description|default:order.project.description|truncatewords:20 }}
+              </p>
+              <div class="mt-2 flex flex-wrap gap-3 text-[11px] text-[#0F172A]/60">
+                <span>Category:
+                  <span class="font-medium text-[#0F172A]">
+                    {{ order.project.get_category_display|default:order.project.category|capfirst }}
+                  </span>
+                </span>
+                <span>Level:
+                  <span class="font-medium text-[#0F172A]">
+                    {{ order.project.get_level_display|default:order.project.level|capfirst }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Price -->
+          <div class="bg-[#F7F9FC] rounded-2xl px-4 py-3 flex items-center justify-between">
+            <div class="text-xs text-[#0F172A]/60">
+              <p>Project price</p>
+            </div>
+            <div class="text-right">
+              <p class="text-sm font-semibold text-[#4F46E5]">₹{{ order.project.price }}</p>
+            </div>
+          </div>
+
+          <!-- Info text -->
+          <p class="text-xs text-[#0F172A]/60">
+            We will contact you on your registered email (and WhatsApp if needed) to discuss
+            payment and delivery of the full project source code and explanation.
+          </p>
+        </div>
+
+        <!-- Right: actions & tracking -->
+        <div class="space-y-4">
+          <!-- Order progress -->
+          <div class="bg-[#F7F9FC] rounded-2xl p-4">
+            <p class="text-xs font-semibold text-[#0F172A] mb-3">Order progress</p>
+            <ol class="space-y-2 text-[11px] text-[#0F172A]/70">
+              <li class="flex items-start gap-2">
+                <span class="mt-0.5 w-2 h-2 rounded-full {% if order.status in 'pending,completed,cancelled' %}bg-emerald-500{% else %}bg-slate-300{% endif %}"></span>
+                <span>Order placed</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="mt-0.5 w-2 h-2 rounded-full {% if order.status == 'pending' %}bg-amber-400{% elif order.status == 'completed' %}bg-emerald-500{% else %}bg-slate-300{% endif %}"></span>
+                <span>Discussion &amp; confirmation (requirements, pricing, and timeline)</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="mt-0.5 w-2 h-2 rounded-full {% if order.status == 'completed' %}bg-emerald-500{% elif order.status == 'cancelled' %}bg-rose-500{% else %}bg-slate-300{% endif %}"></span>
+                <span>
+                  Delivery &amp; explanation
+                  {% if order.status == 'completed' %}
+                    (completed)
+                  {% elif order.status == 'cancelled' %}
+                    (cancelled)
+                  {% endif %}
+                </span>
+              </li>
+            </ol>
+          </div>
+
+          <!-- Actions -->
+          <div class="bg-white rounded-2xl border border-slate-100 p-4 space-y-3">
+            <p class="text-xs font-semibold text-[#0F172A] mb-1">Actions</p>
+
+            <div class="flex flex-wrap gap-2">
+              <a href="{% url 'store:project_detail' order.project.slug %}"
+                 class="flex-1 inline-flex items-center justify-center px-4 py-2 rounded-full bg-[#4F46E5] text-white text-xs font-semibold hover:bg-[#4338CA]">
+                View project details
+              </a>
+            </div>
+
+            {% if order.status == 'pending' %}
+              <form method="post" class="mt-1">
+                {% csrf_token %}
+                <button type="submit" name="cancel_order" value="1"
+                        class="w-full inline-flex items-center justify-center px-4 py-2 rounded-full border border-rose-200 bg-rose-50 text-rose-700 text-xs font-semibold hover:bg-rose-100">
+                  Cancel this order
+                </button>
+              </form>
+            {% endif %}
+          </div>
+
+          <!-- Review section -->
+          {% if order.status == 'completed' %}
+            <div class="bg-white rounded-2xl border border-slate-100 p-4">
+              <p class="text-xs font-semibold text-[#0F172A] mb-2">
+                Your feedback
+              </p>
+
+              {% if review %}
+                <p class="text-[11px] text-[#0F172A]/60 mb-1">
+                  Rating:
+                  <span class="font-semibold text-[#4F46E5]">
+                    {{ review.rating }} / 5
+                  </span>
+                </p>
+                <p class="text-[11px] text-[#0F172A]/70 whitespace-pre-line">
+                  {{ review.comment|default:"No detailed comment provided." }}
+                </p>
+                <p class="mt-2 text-[10px] text-[#0F172A]/40">
+                  You submitted this review on {{ review.created_at|date:"d M Y H:i" }}.
+                </p>
+              {% else %}
+                <p class="text-[11px] text-[#0F172A]/60 mb-3">
+                  Please rate your experience with this project. Your feedback helps us improve.
+                </p>
+                <form method="post" class="space-y-3">
+                  {% csrf_token %}
+                  <div>
+                    <label class="block text-[11px] text-[#0F172A]/70 mb-1">Rating (1–5)</label>
+                    <select name="rating"
+                            class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-[#F7F9FC] text-[11px] focus:outline-none focus:ring-2 focus:ring-[#38BDF8]/50">
+                      {% for r in "12345" %}
+                        <option value="{{ r }}">{{ r }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-[11px] text-[#0F172A]/70 mb-1">Comment (optional)</label>
+                    <textarea name="comment" rows="3"
+                              class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-[#F7F9FC] text-[11px] focus:outline-none focus:ring-2 focus:ring-[#38BDF8]/50"
+                              placeholder="Share what you liked or what we can improve..."></textarea>
+                  </div>
+                  <button type="submit" name="submit_review" value="1"
+                          class="w-full inline-flex items-center justify-center px-4 py-2 rounded-full bg-[#38BDF8] text-white text-xs font-semibold hover:bg-[#0EA5E9]">
+                    Submit feedback
+                  </button>
+                </form>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

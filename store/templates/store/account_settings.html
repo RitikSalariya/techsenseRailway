@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-[#F3F4F6]">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <h1 class="text-2xl font-semibold text-[#0F172A] mb-4">Edit Profile</h1>
+    <p class="text-xs text-[#0F172A]/60 mb-6">
+      Update your basic details so we can contact you easily about your projects.
+    </p>
+
+    {% if messages %}
+      <div class="mb-4 space-y-2">
+        {% for message in messages %}
+          <div class="px-4 py-3 rounded-2xl text-sm bg-emerald-50 text-emerald-700 border border-emerald-100">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="bg-white rounded-3xl shadow-md border border-slate-100 p-6">
+      <form method="post" class="grid gap-5 md:grid-cols-2">
+        {% csrf_token %}
+
+        <!-- Left column -->
+        <div class="space-y-4">
+          <div>
+            <label class="block text-[11px] text-[#0F172A]/70 mb-1">Full name</label>
+            {{ p_form.full_name }}
+          </div>
+
+          <div>
+            <label class="block text-[11px] text-[#0F172A]/70 mb-1">Email</label>
+            {{ u_form.email }}
+          </div>
+
+          <div>
+            <label class="block text-[11px] text-[#0F172A]/70 mb-1">Phone</label>
+            {{ p_form.phone }}
+          </div>
+
+          <div>
+            <label class="block text-[11px] text-[#0F172A]/70 mb-1">WhatsApp</label>
+            {{ p_form.whatsapp }}
+          </div>
+        </div>
+
+        <!-- Right column -->
+        <div class="space-y-4">
+          <div>
+            <label class="block text-[11px] text-[#0F172A]/70 mb-1">College / University</label>
+            {{ p_form.college }}
+          </div>
+
+          <div>
+            <label class="block text-[11px] text-[#0F172A]/70 mb-1">Branch</label>
+            {{ p_form.branch }}
+          </div>
+
+          <div>
+            <label class="block text-[11px] text-[#0F172A]/70 mb-1">Year</label>
+            {{ p_form.year }}
+          </div>
+        </div>
+
+        <div class="md:col-span-2 pt-2">
+          <button type="submit"
+                  class="inline-flex items-center px-6 py-3 rounded-full bg-[#4F46E5] text-white text-sm font-semibold hover:bg-[#4338CA]">
+            Save changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

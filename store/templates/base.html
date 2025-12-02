@@ -1,0 +1,257 @@
+{% load static %}
+<head>
+  <meta charset="utf-8">
+
+  <!-- RESPONSIVE -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Techsense – CSE Project Store</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lottie Player for motion logo -->
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+  <!-- Your custom styles -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="bg-[#F3F4F6] text-slate-900">
+
+  <!-- NAVBAR -->
+  <header class="border-b border-slate-200 bg-white/70 backdrop-blur-xl">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-3">
+
+      
+      <!-- LEFT: LOGO -->
+      <!-- LEFT: LOGO -->
+      <!-- LEFT: LOGO with TS Text -->
+      <a href="{% url 'store:home' %}" class="flex items-center gap-3 group">
+        <!-- Animated Logo Container -->
+        <div class="relative w-10 h-10 rounded-2xl overflow-hidden flex items-center justify-center bg-gradient-to-br from-[#38BDF8] to-[#4F46E5] group-hover:from-[#4F46E5] group-hover:to-[#38BDF8] transition-all duration-500">
+          
+          <!-- Animated Background Rings -->
+          <svg class="absolute w-full h-full" viewBox="0 0 40 40">
+            <!-- Outer Ring -->
+            <circle cx="20" cy="20" r="18" stroke="rgba(255,255,255,0.2)" stroke-width="1" fill="none">
+              <animate attributeName="stroke-dasharray" values="0,150;150,0" dur="3s" repeatCount="indefinite"/>
+            </circle>
+            
+            <!-- Inner Pulse Ring -->
+            <circle cx="20" cy="20" r="14" stroke="rgba(255,255,255,0.3)" stroke-width="1" fill="none">
+              <animate attributeName="r" values="14;16;14" dur="2s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.3;0.6;0.3" dur="2s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+          
+          <!-- TS Text with Animation -->
+          <div class="relative flex items-center justify-center w-full h-full">
+            <span class="text-white font-bold text-sm tracking-tight relative z-10 animate-pulse group-hover:animate-none group-hover:scale-110 transition-transform duration-300">
+              TS
+            </span>
+            
+            <!-- Glow effect behind text -->
+            <div class="absolute inset-0 bg-white/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            
+            <!-- Floating particles -->
+            <div class="absolute inset-0">
+              <div class="absolute top-1 left-2 w-0.5 h-0.5 bg-white rounded-full animate-bounce" style="animation-delay: 0s"></div>
+              <div class="absolute bottom-2 right-1 w-0.5 h-0.5 bg-white rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+              <div class="absolute top-2 right-2 w-0.5 h-0.5 bg-white rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+            </div>
+          </div>
+          
+          <!-- Hover Glow Effect -->
+          <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-transparent via-white/0 to-transparent opacity-0 group-hover:opacity-100 group-hover:via-white/10 transition-opacity duration-500"></div>
+          
+          <!-- Click Pulse Effect -->
+          <div class="absolute inset-0 rounded-2xl border-2 border-white/0 group-hover:border-white/20 transition-all duration-300"></div>
+        </div>
+
+        <!-- Logo Text -->
+        <div class="leading-tight">
+          <span class="block text-sm font-semibold text-[#0F172A] group-hover:text-[#4F46E5] transition-colors duration-300">
+            Techsense
+          </span>
+          <span class="block text-[11px] text-[#0F172A]/60 group-hover:text-[#4F46E5]/70 transition-colors duration-300">
+            CSE Project Store
+          </span>
+        </div>
+      </a>
+
+ <style>
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-3px); }
+  }
+  
+  @keyframes glow {
+    0%, 100% { filter: drop-shadow(0 0 2px rgba(79, 70, 229, 0.5)); }
+    50% { filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.7)); }
+  }
+  
+  .group:hover svg {
+    animation: float 2s ease-in-out infinite, glow 3s ease-in-out infinite;
+  }
+</style> 
+
+
+
+      <!-- CENTER: DESKTOP LINKS -->
+      <div class="hidden md:flex items-center gap-6 text-sm font-medium text-[#0F172A]/70">
+        <a href="{% url 'store:project_list' %}" class="hover:text-[#4F46E5] transition-colors">
+          Projects
+        </a>
+        <a href="{% url 'store:blog_list' %}" class="hover:text-[#4F46E5] transition-colors">
+          Blog
+        </a>
+        <a href="{% url 'store:contact' %}" class="hover:text-[#4F46E5] transition-colors">
+          Custom Idea
+        </a>
+        <a href="{% url 'store:view_cart' %}" class="hover:text-[#4F46E5] transition-colors">
+          Cart
+        </a>
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'store:my_orders' %}" class="hover:text-[#4F46E5] transition-colors">
+          My Orders
+        </a>
+        {% endif %}
+
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'store:account_dashboard' %}" class="hover:text-[#4F46E5] transition-colors ml-4">
+          Account
+        </a>
+        {% endif %}
+      </div>
+
+      <!-- RIGHT: DESKTOP AUTH -->
+      <div class="hidden md:flex items-center gap-3 text-sm">
+        {% if request.user.is_authenticated %}
+          <span class="text-[#0F172A]/70">
+            Hi, {{ request.user.username|default:"Student" }} 👋
+          </span>
+          <a href="{% url 'store:logout' %}"
+             class="px-4 py-2 rounded-full border border-slate-200 bg-white text-[#0F172A]/80 hover:bg-slate-50">
+            Logout
+          </a>
+        {% else %}
+          <a href="{% url 'store:login' %}"
+             class="px-4 py-2 rounded-full text-[#0F172A]/80 hover:bg-slate-50">
+            Login
+          </a>
+          <a href="{% url 'store:signup' %}"
+             class="px-4 py-2 rounded-full bg-[#4F46E5] text-white font-medium shadow-md hover:bg-[#4338CA]">
+            Sign up
+          </a>
+        {% endif %}
+      </div>
+
+      <!-- MOBILE: HAMBURGER -->
+      <button id="mobileMenuButton"
+              class="md:hidden inline-flex items-center justify-center w-9 h-9 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50">
+        <svg id="mobileMenuIconOpen" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+             viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <svg id="mobileMenuIconClose" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="2"
+             viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </nav>
+
+    <!-- MOBILE DROPDOWN -->
+    <div id="mobileMenu" class="md:hidden hidden border-t border-slate-200 bg-white/95 backdrop-blur-xl">
+      <nav class="px-4 pt-3 pb-4 space-y-1 text-sm font-medium text-[#0F172A]/80">
+        <a href="{% url 'store:project_list' %}" class="block px-2 py-2 rounded-lg hover:bg-slate-50">
+          Projects
+        </a>
+        <a href="{% url 'store:blog_list' %}" class="block px-2 py-2 rounded-lg hover:bg-slate-50">
+          Blog
+        </a>
+        <a href="{% url 'store:contact' %}" class="block px-2 py-2 rounded-lg hover:bg-slate-50">
+          Custom Idea
+        </a>
+        <a href="{% url 'store:view_cart' %}" class="block px-2 py-2 rounded-lg hover:bg-slate-50">
+          Cart
+        </a>
+
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'store:my_orders' %}" class="block px-2 py-2 rounded-lg hover:bg-slate-50">
+          My Orders
+        </a>
+        <hr class="my-2 border-slate-200">
+        <div class="flex items-center justify-between px-2 py-1">
+          <span class="text-xs text-[#0F172A]/60">
+            Hi, {{ request.user.username|default:"Student" }} 👋
+          </span>
+          <a href="{% url 'store:logout' %}"
+             class="text-xs px-3 py-1 rounded-full border border-slate-200 bg-white hover:bg-slate-50">
+            Logout
+          </a>
+        </div>
+        {% else %}
+        <hr class="my-2 border-slate-200">
+        <div class="flex gap-2 px-2">
+          <a href="{% url 'store:login' %}"
+             class="flex-1 px-3 py-2 rounded-full text-center border border-slate-200 bg-white hover:bg-slate-50 text-xs">
+            Login
+          </a>
+          <a href="{% url 'store:signup' %}"
+             class="flex-1 px-3 py-2 rounded-full text-center bg-[#4F46E5] text-white text-xs font-medium hover:bg-[#4338CA]">
+            Sign up
+          </a>
+        </div>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="mt-10 border-t border-slate-200 py-6 text-center text-xs text-slate-500">
+    © 2025 Techsense. All rights reserved. <span class="ml-1">Made for CSE students 🚀</span>
+  </footer>
+
+  <!-- MOBILE MENU SCRIPT -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const btn = document.getElementById('mobileMenuButton');
+      const menu = document.getElementById('mobileMenu');
+      const iconOpen = document.getElementById('mobileMenuIconOpen');
+      const iconClose = document.getElementById('mobileMenuIconClose');
+
+      if (!btn || !menu) return;
+
+      btn.addEventListener('click', function () {
+        const isHidden = menu.classList.contains('hidden');
+        if (isHidden) {
+          menu.classList.remove('hidden');
+          iconOpen.classList.add('hidden');
+          iconClose.classList.remove('hidden');
+        } else {
+          menu.classList.add('hidden');
+          iconOpen.classList.remove('hidden');
+          iconClose.classList.add('hidden');
+        }
+      });
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const logo = document.getElementById('techsenseLogo');
+      if (!logo) return;
+
+      logo.addEventListener('mouseenter', () => logo.play());
+      logo.addEventListener('mouseleave', () => logo.stop());
+    });
+  </script>
+
+</body>
+</html>

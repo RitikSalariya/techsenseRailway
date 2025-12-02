@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    {# BACK BUTTON #}
+    <a href="{% url 'store:blog_list' %}"
+       class="flex items-center space-x-2 text-[#38BDF8] mb-8 hover:text-[#0EA5E9] transition-colors group text-sm">
+      <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none"
+           stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M15 19l-7-7 7-7" />
+      </svg>
+      <span>Back to Blog</span>
+    </a>
+
+    {# META INFO #}
+    <div class="flex flex-wrap items-center gap-3 text-[12px] text-[#0F172A]/60 mb-4">
+      <span>{{ post.created_at|date:"d M Y" }}</span>
+      <span>•</span>
+      <span>Techsense Blog</span>
+    </div>
+
+    {# TITLE #}
+    <h1 class="text-2xl md:text-3xl font-semibold text-[#0F172A] mb-4">
+      {{ post.title }}
+    </h1>
+
+    {# EXCERPT / INTRO #}
+    <p class="text-[#0F172A]/70 text-sm md:text-base mb-6 pb-6 border-b border-[#0F172A]/10">
+      {{ post.content|truncatewords:35 }}
+    </p>
+
+    {# CONTENT #}
+    <div class="prose max-w-none mb-12">
+      <div class="text-[#0F172A]/80 text-sm leading-relaxed whitespace-pre-line">
+        {{ post.content }}
+      </div>
+    </div>
+
+    {# RELATED POSTS #}
+    {% if related_posts %}
+    <div class="mt-10">
+      <h2 class="text-lg font-semibold text-[#0F172A] mb-4">Related Articles</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {% for rel in related_posts %}
+        <a href="{% url 'store:blog_detail' rel.pk %}"
+           class="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/20 shadow-md hover:shadow-xl hover:-translate-y-1 transition p-4 flex flex-col justify-between">
+          <div>
+            <p class="text-[11px] text-[#0F172A]/40 mb-1">
+              {{ rel.created_at|date:"d M Y" }}
+            </p>
+            <h3 class="font-semibold text-[#0F172A] text-sm mb-1 line-clamp-2">
+              {{ rel.title }}
+            </h3>
+            <p class="text-[11px] text-[#0F172A]/70 line-clamp-3">
+              {{ rel.content|truncatewords:18 }}
+            </p>
+          </div>
+          <span class="mt-2 text-[11px] text-[#38BDF8]">Read more →</span>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

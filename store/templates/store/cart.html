@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+{% if not items %}
+<div class="min-h-screen flex items-center justify-center">
+  <div class="max-w-md w-full mx-4 text-center">
+    <div class="w-24 h-24 bg-gradient-to-br from-[#38BDF8] to-[#4F46E5] rounded-full flex items-center justify-center mx-auto mb-6">
+      <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" stroke-width="2"
+           viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m5-9v9m4-9v9m4-9l2 9" />
+      </svg>
+    </div>
+    <h2 class="text-xl font-semibold text-[#0F172A] mb-4">Your Cart is Empty</h2>
+    <p class="text-[#0F172A]/60 mb-8">
+      Start adding projects to your cart and build your portfolio!
+    </p>
+    <a href="{% url 'store:project_list' %}"
+       class="inline-flex items-center px-6 py-3 rounded-full bg-[#4F46E5] text-white text-sm font-semibold hover:bg-[#4338CA] transition">
+      Browse Projects
+    </a>
+  </div>
+</div>
+{% else %}
+<div class="min-h-screen">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="text-3xl font-semibold text-[#0F172A] mb-8">Shopping Cart</h1>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {# CART ITEMS #}
+      <div class="lg:col-span-2 space-y-4">
+        {% for item in items %}
+        <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 flex items-center gap-6">
+          <div class="w-24 h-24 rounded-xl overflow-hidden bg-gradient-to-br from-[#38BDF8]/10 to-[#4F46E5]/10 flex-shrink-0">
+            {% if item.project.thumbnail %}
+            <img src="{{ item.project.thumbnail.url }}" alt="{{ item.project.title }}"
+                 class="w-full h-full object-cover">
+            {% endif %}
+          </div>
+
+          <div class="flex-1 min-w-0">
+            <h3 class="text-[#0F172A] mb-1 truncate font-medium">
+              {{ item.project.title }}
+            </h3>
+            <p class="text-xs text-[#0F172A]/60 mb-1">
+              Qty: {{ item.qty }}
+            </p>
+            <span class="inline-block px-3 py-1 bg-gradient-to-r from-[#38BDF8]/20 to-[#4F46E5]/20 text-[#4F46E5] text-[11px] rounded-full">
+              {{ item.project.category|capfirst }}
+            </span>
+          </div>
+
+          <div class="text-right">
+            <p class="text-[#4F46E5] mb-3 font-semibold">
+              ₹{{ item.subtotal }}
+            </p>
+            <a href="{% url 'store:remove_from_cart' item.project.id %}"
+               class="p-2 hover:bg-red-50 rounded-xl transition-colors inline-flex items-center justify-center">
+              <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" stroke-width="2"
+                   viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M3 6h18M9 6V4h6v2m-7 4v8m4-8v8m4-8v8" />
+              </svg>
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      {# ORDER SUMMARY #}
+      <div class="lg:col-span-1">
+        <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 sticky top-24">
+          <h3 class="text-lg font-semibold text-[#0F172A] mb-6">Order Summary</h3>
+
+          <div class="space-y-3 mb-6 text-sm">
+            <div class="flex justify-between text-[#0F172A]/70">
+              <span>Subtotal ({{ items|length }} items)</span>
+              <span>₹{{ total }}</span>
+            </div>
+            <div class="flex justify-between text-[#0F172A]/70">
+              <span>GST (18%)</span>
+              <span>₹{{ gst }}</span>
+            </div>
+            <div class="pt-3 border-t border-[#0F172A]/10">
+              <div class="flex justify-between text-[#0F172A] font-semibold">
+                <span>Total</span>
+                <span>₹{{ grand_total }}</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="text-[11px] text-[#0F172A]/50 mb-4">
+            * Online payment / manual payment flow can be integrated here later.
+          </p>
+
+          <a href="{% url 'store:contact' %}"
+             class="inline-flex items-center justify-center w-full px-6 py-3 rounded-xl bg-[#4F46E5] text-white text-sm font-semibold hover:bg-[#4338CA] transition">
+            Proceed to Checkout
+          </a>
+
+          <a href="{% url 'store:project_list' %}"
+             class="w-full mt-3 px-6 py-3 text-[#38BDF8] hover:bg-[#F7F9FC] rounded-xl transition-all inline-flex items-center justify-center text-sm">
+            Continue Shopping
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    {# HEADER #}
+    <div class="mb-12">
+      <h1 class="text-3xl font-semibold text-[#0F172A] mb-4">All Projects</h1>
+      <p class="text-[#0F172A]/60">
+        Browse our collection of {{ projects|length }} premium projects
+      </p>
+    </div>
+
+    {# FILTERS (maps to your GET params: q, category, level) #}
+    <div class="mb-12">
+      <form method="get" class="space-y-4 lg:space-y-0 lg:flex lg:items-end lg:gap-4">
+
+        {# SEARCH #}
+        <div class="flex-1">
+          <label class="block text-sm text-[#0F172A]/70 mb-2">Search</label>
+          <input
+            type="text"
+            name="q"
+            value="{{ q }}"
+            placeholder="Search by title, tech stack, or description"
+            class="w-full px-4 py-3 bg-[#F7F9FC] border border-[#0F172A]/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#38BDF8]/40"
+          />
+        </div>
+
+        {# CATEGORY #}
+        <div>
+          <label class="block text-sm text-[#0F172A]/70 mb-2">Category</label>
+          <select
+            name="category"
+            class="w-full px-4 py-3 bg-[#F7F9FC] border border-[#0F172A]/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#38BDF8]/40"
+          >
+            <option value="">All</option>
+            <option value="web" {% if category == "web" %}selected{% endif %}>Web Development</option>
+            <option value="ml" {% if category == "ml" %}selected{% endif %}>ML / AI</option>
+            <option value="mobile" {% if category == "mobile" %}selected{% endif %}>Mobile Apps</option>
+            <option value="iot" {% if category == "iot" %}selected{% endif %}>IoT</option>
+          </select>
+        </div>
+
+        {# LEVEL #}
+        <div>
+          <label class="block text-sm text-[#0F172A]/70 mb-2">Level</label>
+          <select
+            name="level"
+            class="w-full px-4 py-3 bg-[#F7F9FC] border border-[#0F172A]/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#38BDF8]/40"
+          >
+            <option value="">All</option>
+            <option value="mini" {% if level == "mini" %}selected{% endif %}>Mini Project</option>
+            <option value="major" {% if level == "major" %}selected{% endif %}>Major Project</option>
+          </select>
+        </div>
+
+        <div class="flex gap-2">
+          <button
+            type="submit"
+            class="mt-6 inline-flex items-center px-6 py-3 rounded-xl bg-[#4F46E5] text-white text-sm font-semibold shadow-lg hover:bg-[#4338CA] transition"
+          >
+            Apply Filters
+          </button>
+          <a
+            href="{% url 'store:project_list' %}"
+            class="mt-6 inline-flex items-center px-4 py-3 rounded-xl border border-[#CBD5F5] text-sm text-[#0F172A] bg-white hover:bg-[#F9FAFB]"
+          >
+            Reset
+          </a>
+        </div>
+      </form>
+    </div>
+
+    {# RESULTS COUNT #}
+    <div class="mb-6">
+      <p class="text-[#0F172A]/60">
+        Showing {{ projects|length }} {% if projects|length == 1 %}project{% else %}projects{% endif %}
+      </p>
+    </div>
+
+    {# PROJECT GRID (simple grid instead of Masonry lib) #}
+    {% if projects %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for project in projects %}
+      <a href="{% url 'store:project_detail' project.slug %}"
+         class="group bg-white/80 backdrop-blur-sm rounded-2xl border border-white/20 shadow-md hover:shadow-xl hover:-translate-y-1 transition overflow-hidden flex flex-col">
+        <div class="relative">
+          {% if project.thumbnail %}
+          <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}"
+               class="w-full h-48 object-cover">
+          {% else %}
+          <div class="w-full h-48 bg-slate-100 flex items-center justify-center text-xs text-slate-400">
+            No image yet
+          </div>
+          {% endif %}
+          <span class="absolute top-3 left-3 text-[11px] px-2 py-0.5 rounded-full bg-white/80 backdrop-blur text-slate-700 border border-slate-200">
+            {{ project.level|capfirst|default:"Project" }}
+          </span>
+        </div>
+
+        <div class="p-4 space-y-2 flex-1 flex flex-col">
+          <h3 class="font-semibold text-[#0F172A] text-sm line-clamp-1">
+            {{ project.title }}
+          </h3>
+          <p class="text-[11px] text-[#0F172A]/60">
+            {{ project.tech_stack }}
+          </p>
+          <p class="text-xs text-[#0F172A]/70 line-clamp-2 flex-1">
+            {{ project.short_description|default:project.description|truncatewords:18 }}
+          </p>
+
+          <div class="flex items-center justify-between pt-2">
+            <span class="text-sm font-semibold text-[#4F46E5]">
+              ₹{{ project.price }}
+            </span>
+            <span class="text-[11px] text-[#0F172A]/40">
+              {{ project.created_at|date:"d M Y" }}
+            </span>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-20">
+      <div class="w-20 h-20 bg-gradient-to-br from-[#38BDF8] to-[#4F46E5] rounded-full flex items-center justify-center mx-auto mb-4 opacity-70">
+        <span class="text-white text-3xl">🔍</span>
+      </div>
+      <h3 class="text-[#0F172A] mb-2 text-lg font-semibold">No projects found</h3>
+      <p class="text-[#0F172A]/60">Try adjusting your filters or search query.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

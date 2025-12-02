@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+    <!-- Page header -->
+    <div class="mb-8 flex items-center justify-between gap-4">
+      <div>
+        <h1 class="text-2xl font-semibold text-[#0F172A]">My Orders</h1>
+        <p class="text-sm text-[#0F172A]/60">
+          All the projects you’ve requested from Techsense.
+        </p>
+      </div>
+      <a href="{% url 'store:project_list' %}"
+         class="hidden sm:inline-flex items-center px-4 py-2 rounded-full border border-slate-200 bg-white text-xs font-medium text-[#0F172A]/80 hover:bg-slate-50">
+        Browse more projects
+      </a>
+    </div>
+
+    {% if orders %}
+      <div class="space-y-4">
+        {% for order in orders %}
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/20 shadow-md hover:shadow-xl hover:-translate-y-0.5 transition flex flex-col sm:flex-row gap-4 p-4 sm:p-5">
+
+            <!-- Thumbnail -->
+            <div class="w-full sm:w-40 h-40 sm:h-28 rounded-xl overflow-hidden bg-gradient-to-br from-[#38BDF8]/10 to-[#4F46E5]/10 flex-shrink-0">
+              {% if order.project.thumbnail %}
+                <img src="{{ order.project.thumbnail.url }}"
+                     alt="{{ order.project.title }}"
+                     class="w-full h-full object-cover">
+              {% else %}
+                <div class="w-full h-full flex items-center justify-center text-xs text-slate-400 px-3 text-center">
+                  No image uploaded for this project yet
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Main info -->
+            <div class="flex-1 min-w-0 flex flex-col gap-2">
+              <!-- Top row: order id + status -->
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="text-xs text-[#0F172A]/60">
+                  <span class="font-medium text-[#0F172A]">Order #{{ order.id }}</span>
+                  <span class="mx-1">•</span>
+                  <span>{{ order.created_at|date:"d M Y H:i" }}</span>
+                </div>
+
+                {% if order.status == 'completed' %}
+                  <span class="inline-flex items-center px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-medium border border-emerald-100">
+                    ● Completed
+                  </span>
+                {% elif order.status == 'cancelled' %}
+                  <span class="inline-flex items-center px-3 py-1 rounded-full bg-rose-50 text-rose-700 text-[11px] font-medium border border-rose-100">
+                    ● Cancelled
+                  </span>
+                {% else %}
+                  <span class="inline-flex items-center px-3 py-1 rounded-full bg-amber-50 text-amber-700 text-[11px] font-medium border border-amber-100">
+                    ● Pending
+                  </span>
+                {% endif %}
+              </div>
+
+              <!-- Project title + desc -->
+              <div>
+                <h2 class="text-sm sm:text-base font-semibold text-[#0F172A] truncate">
+                  {{ order.project.title }}
+                </h2>
+                <p class="text-xs text-[#0F172A]/60 mt-1 line-clamp-2">
+                  {{ order.project.short_description|default:order.project.description|truncatewords:20 }}
+                </p>
+              </div>
+
+              <!-- Meta info -->
+              <div class="flex flex-wrap items-center gap-3 text-[11px] text-[#0F172A]/60">
+                <span>
+                  Category:
+                  <span class="font-medium text-[#0F172A]">
+                    {{ order.project.get_category_display|default:order.project.category|capfirst }}
+                  </span>
+                </span>
+                <span>•</span>
+                <span>
+                  Level:
+                  <span class="font-medium text-[#0F172A]">
+                    {{ order.project.get_level_display|default:order.project.level|capfirst }}
+                  </span>
+                </span>
+                <span>•</span>
+                <span>
+                  Price:
+                  <span class="font-semibold text-[#4F46E5]">
+                    ₹{{ order.project.price }}
+                  </span>
+                </span>
+              </div>
+
+              <!-- Buttons -->
+              <div class="mt-2 flex flex-wrap gap-2">
+                <a href="{% url 'store:project_detail' order.project.slug %}"
+                   class="inline-flex items-center px-4 py-2 rounded-full bg-[#4F46E5] text-white text-xs font-semibold hover:bg-[#4338CA]">
+                  View project
+                </a>
+                <a href="{% url 'store:order_detail' order.id %}"
+                   class="inline-flex items-center px-4 py-2 rounded-full border border-slate-200 bg-white text-xs font-semibold text-[#0F172A]/80 hover:bg-slate-50">
+                  View order details
+                </a>
+              </div>
+            </div>
+
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <!-- Empty state -->
+      <div class="text-center py-16">
+        <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#38BDF8] to-[#4F46E5] flex items-center justify-center text-white text-3xl">
+          📦
+        </div>
+        <h2 class="text-lg font-semibold text-[#0F172A] mb-2">No orders yet</h2>
+        <p class="text-sm text-[#0F172A]/60 mb-6">
+          When you buy a project, it will appear here.
+        </p>
+        <a href="{% url 'store:project_list' %}"
+           class="inline-flex items-center px-6 py-3 rounded-full bg-[#4F46E5] text-white text-sm font-semibold hover:bg-[#4338CA]">
+          Explore projects
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

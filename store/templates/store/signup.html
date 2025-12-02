@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <div class="max-w-md mx-auto">
+
+    {# TITLE #}
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-semibold text-[#0F172A] mb-2">Create an account</h1>
+      <p class="text-sm text-[#0F172A]/60">
+        Create a Techsense account to save your orders and download projects anytime.
+        We'll send you a verification link on your email.
+      </p>
+    </div>
+
+    {# DJANGO MESSAGES #}
+    {% if messages %}
+      <div class="mb-4 space-y-2">
+        {% for message in messages %}
+          <div class="text-sm px-4 py-3 rounded-xl
+                      {% if message.tags == 'success' %}
+                        bg-emerald-50 text-emerald-700 border border-emerald-100
+                      {% elif message.tags == 'error' %}
+                        bg-red-50 text-red-700 border border-red-100
+                      {% else %}
+                        bg-slate-50 text-slate-700 border border-slate-100
+                      {% endif %}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="bg-white rounded-3xl shadow-xl border border-slate-100 p-8">
+      {# NON-FIELD ERRORS (e.g. password mismatch) #}
+      {% if form.non_field_errors %}
+        <div class="mb-4 text-sm px-4 py-3 rounded-xl bg-red-50 text-red-700 border border-red-100">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <form method="post" class="space-y-5">
+        {% csrf_token %}
+
+        {# LOOP OVER ALL FIELDS FROM THE FORM #}
+        {% for field in form %}
+          <div class="space-y-1">
+            <label class="text-sm font-medium text-[#0F172A]" for="{{ field.id_for_label }}">
+              {{ field.label }}
+            </label>
+            {{ field }}
+            {% if field.help_text %}
+              <p class="text-[11px] text-slate-400">{{ field.help_text }}</p>
+            {% endif %}
+            {% if field.errors %}
+              <p class="text-xs text-red-600 mt-1">{{ field.errors.0 }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+
+        <button type="submit"
+                class="w-full mt-2 inline-flex items-center justify-center px-4 py-2.5 rounded-xl
+                       bg-[#4F46E5] text-white text-sm font-semibold shadow-md
+                       hover:bg-[#4338CA] transition">
+          Sign up
+        </button>
+      </form>
+
+      <p class="mt-6 text-center text-xs text-[#0F172A]/60">
+        Already have an account?
+        <a href="{% url 'store:login' %}" class="font-semibold text-[#4F46E5] hover:text-[#4338CA]">
+          Login
+        </a>
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}
