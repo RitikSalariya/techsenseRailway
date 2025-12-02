@@ -1,0 +1,7 @@
+.s2env/
+venv/
+__pycache__/
+*.pyc
+*.log
+staticfiles/
+db.sqlite3
