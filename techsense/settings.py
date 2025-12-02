@@ -21,7 +21,16 @@ DEBUG = os.getenv("DEBUG", "True") == "True"
 
 
 # ALLOWED_HOSTS: list[str] = []
-ALLOWED_HOSTS = ["*", ".railway.app", "127.0.0.1", "localhost"]
+# ALLOWED_HOSTS = ["*", ".railway.app", "127.0.0.1", "localhost"]
+ALLOWED_HOSTS = [
+    "web-production-78712.up.railway.app",  # your exact Railway URL
+    ".up.railway.app",                      # any other Railway subdomain
+    "127.0.0.1",
+    "localhost",
+]
+CSRF_TRUSTED_ORIGINS = [
+    "https://web-production-78712.up.railway.app",
+]
 
 LOGIN_URL = 'store:login'
 
