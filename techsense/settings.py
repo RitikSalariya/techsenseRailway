@@ -6,6 +6,8 @@ Local development version (no deployment extras).
 from pathlib import Path
 import os
 import dj_database_url
+#from django.conf import settings  # already imported at top? then skip this
+
 # ----------------------------------------------------
 # Paths
 # ----------------------------------------------------
@@ -17,8 +19,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6i+_lksx=4j6a4tpxo*kl^ad_2e**axw&7%%q&u^(lrnr9niv6'
 
 # Local development only – keep True
-DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = os.getenv("DEBUG", "True") == "True"
 
+# ---------- Security for Railway (HTTPS behind proxy) ----------
+if not DEBUG:
+    # Tell Django that the proxy sets X-Forwarded-Proto to 'https'
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+    # Cookies should only be sent over HTTPS in production
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
 
 
 # ALLOWED_HOSTS: list[str] = []
@@ -189,5 +199,5 @@ else:
 
 
 
-import logging
-logging.basicConfig(level=logging.DEBUG)
+# import logging
+# logging.basicConfig(level=logging.DEBUG)
