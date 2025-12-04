@@ -3,8 +3,9 @@
 from decimal import Decimal
 import random
 
+from .email_utils import send_brevo_email
 
-
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import (
     authenticate,
@@ -304,17 +305,21 @@ def user_signup(request):
                 f"If you did not create this account, you can ignore this email."
             )
 
-            try:
-                email = EmailMessage(subject, message, to=[user.email])
-                email.send(fail_silently=False)
-            except Exception as e:
-                logger.exception("Verification email failed to send")
-                # Optional: show a softer message instead of crashing
-                messages.error(
-                    request,
-                    "We couldn't send the verification email right now. "
-                    "Please try again later."
-                )
+            if not DEBUG:  # import DEBUG from django.conf if needed
+                sent = send_brevo_email(user.email, subject, message)
+                if not sent:
+                    messages.error(
+                        request,
+                        "We couldn't send the verification email right now. "
+                        "Please try again later."
+                    )
+            else:   
+                # Local: just print to console
+                if settings.DEBUG:
+                    from django.core.mail import send_mail
+                    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+                else:
+                    send_brevo_email(user.email, subject, message)
 
             messages.success(
                 request,
