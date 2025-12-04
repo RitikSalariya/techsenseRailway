@@ -14,7 +14,10 @@ def send_brevo_email(to_email: str, subject: str, text_body: str):
     """
     api_key = os.getenv("BREVO_API_KEY")
     if not api_key:
-        logger.error("BREVO_API_KEY is not set")
+        logger.error(
+            "BREVO_API_KEY is not set. Env keys with 'BREVO' or 'EMAIL': %s",
+            [k for k in os.environ.keys() if "BREVO" in k or "EMAIL" in k]
+        )
         return False
 
     sender_email = os.getenv("DEFAULT_FROM_EMAIL", "techsensetechnogiesltd@gmail.com")
