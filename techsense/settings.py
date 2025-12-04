@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6i+_lksx=4j6a4tpxo*kl^ad_2e**axw&7%%q&u^(lrnr9niv6'
 
 # Local development only – keep True
-DEBUG = os.getenv("DEBUG", "True") == "True"
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
 # ---------- Security for Railway (HTTPS behind proxy) ----------
 if not DEBUG:
