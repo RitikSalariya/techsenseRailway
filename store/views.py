@@ -41,6 +41,21 @@ from .models import (
     Project,
 )
 
+from django.http import HttpResponse
+from django.core.mail import send_mail
+from django.conf import settings
+
+
+def test_email(request):
+    send_mail(
+        subject="Test Email from Django",
+        message="If you received this, email sending works!",
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=["ritiksalariya@gmail.com"],  # <-- change to your real email
+        fail_silently=False,
+    )
+    return HttpResponse("Test email has been sent (if working).")
+
 
 # -------------------------------------------------------------------
 # HELPER: dummy SMS sender (replace with real API later)

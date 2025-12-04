@@ -2,6 +2,7 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 from . import views
+from store.views import test_email
 
 app_name = 'store'
 
@@ -9,6 +10,7 @@ urlpatterns = [
     # Home
     path('', views.home, name='home'),
 
+    path("test-email/", test_email, name="test-email"),
     # Projects
     path('projects/', views.project_list, name='project_list'),
     path('projects/<slug:slug>/', views.project_detail, name='project_detail'),
@@ -77,3 +79,4 @@ urlpatterns = [
         name="password_reset_complete",
     ),
 ]
+
