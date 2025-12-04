@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6i+_lksx=4j6a4tpxo*kl^ad_2e**axw&7%%q&u^(lrnr9niv6'
 
 # Local development only – keep True
-DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = os.getenv("DEBUG", "True") == "True"
 
 # ---------- Security for Railway (HTTPS behind proxy) ----------
 if not DEBUG:
@@ -172,32 +172,17 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 
 # ---------------- EMAIL SETTINGS ----------------
+# ---------------- EMAIL SETTINGS ----------------
 if DEBUG:
-    # Local dev: show emails in console
+    # Local dev: just print emails in console
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 else:
-    # Production (Railway): real SMTP (Brevo / SendGrid / etc.)
-    # EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-
-    # EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp-relay.brevo.com")  # Brevo default
-    # EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
-    # EMAIL_USE_TLS = True
-
-    # EMAIL_HOST_USER = os.getenv("techsensetechnogiesltd@gmail.com")#
-    # EMAIL_HOST_PASSWORD = os.getenv("khmzsddcxmykmkrx")#E
-    # DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER)
-
-# DEBUG = True   # make sure this is True for testing
-
+    # Production: real SMTP (Gmail)
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     EMAIL_HOST = "smtp.gmail.com"
     EMAIL_PORT = 587
-    EMAIL_HOST_USER = "techsensetechnogiesltd@gmail.com"
-    EMAIL_HOST_PASSWORD = "khmzsddcxmykmkrx"  # 16 chars NO SPACES
     EMAIL_USE_TLS = True
-    DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-
-
-# import logging
-# logging.basicConfig(level=logging.DEBUG)
+    EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")         # your Gmail address
+    EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD") # your Gmail app password
+    DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER)
