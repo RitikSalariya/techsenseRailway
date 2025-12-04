@@ -159,6 +159,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Default primary key field type
 # ----------------------------------------------------
 # For local development: print emails to console instead of sending
+
+
 if DEBUG:
     # Local dev: print emails in console
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
@@ -173,3 +175,18 @@ else:
     EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
     EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
     DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER)
+
+# DEBUG = True   # make sure this is True for testing
+
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_HOST = "smtp.gmail.com"
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = "techsensetechnogiesltd@gmail.com"
+# EMAIL_HOST_PASSWORD = "khmzsddcxmykmkrx"  # 16 chars NO SPACES
+# EMAIL_USE_TLS = True
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
+
+import logging
+logging.basicConfig(level=logging.DEBUG)
