@@ -272,6 +272,11 @@ def contact(request):
 # -------------------------------------------------------------------
 # AUTH: SIGNUP / LOGIN / LOGOUT
 # -------------------------------------------------------------------
+from django.core.mail import EmailMessage
+import logging
+
+logger = logging.getLogger(__name__)
+
 def user_signup(request):
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
@@ -298,11 +303,23 @@ def user_signup(request):
                 f"Please click the link below to verify your email address:\n{verify_link}\n\n"
                 f"If you did not create this account, you can ignore this email."
             )
-            EmailMessage(subject, message, to=[user.email]).send()
+
+            try:
+                email = EmailMessage(subject, message, to=[user.email])
+                email.send(fail_silently=False)
+            except Exception as e:
+                logger.exception("Verification email failed to send")
+                # Optional: show a softer message instead of crashing
+                messages.error(
+                    request,
+                    "We couldn't send the verification email right now. "
+                    "Please try again later."
+                )
 
             messages.success(
                 request,
-                "Account created! Please check your email and verify your account before logging in.",
+                "Account created! Please check your email and verify your "
+                "account before logging in.",
             )
             return redirect("store:login")
     else:
