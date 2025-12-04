@@ -305,7 +305,11 @@ def user_signup(request):
                 f"If you did not create this account, you can ignore this email."
             )
 
-            if not DEBUG:  # import DEBUG from django.conf if needed
+            if settings.DEBUG:
+                # Local: just print to console
+                from django.core.mail import send_mail
+                send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+            else:
                 sent = send_brevo_email(user.email, subject, message)
                 if not sent:
                     messages.error(
@@ -313,13 +317,6 @@ def user_signup(request):
                         "We couldn't send the verification email right now. "
                         "Please try again later."
                     )
-            else:   
-                # Local: just print to console
-                if settings.DEBUG:
-                    from django.core.mail import send_mail
-                    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
-                else:
-                    send_brevo_email(user.email, subject, message)
 
             messages.success(
                 request,
