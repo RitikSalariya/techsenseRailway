@@ -161,17 +161,18 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # For local development: print emails to console instead of sending
 
 
+# ---------------- EMAIL SETTINGS ----------------
 if DEBUG:
-    # Local dev: print emails in console
+    # Local dev: show emails in console
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 else:
-    # Production (Railway): real SMTP
+    # Production (Railway): real SMTP (Brevo / SendGrid / etc.)
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.gmail.com")
+
+    EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp-relay.brevo.com")  # Brevo default
     EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
     EMAIL_USE_TLS = True
 
-    # These are ENV VARIABLE NAMES, not real values
     EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
     EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
     DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER)
